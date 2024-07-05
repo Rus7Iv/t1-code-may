@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 
 import { getCode, setStatus } from "../api/api"
+import { LoadingSpinner } from "../components/Spinner"
+import { useLoading } from "../contexts/LoadingContext"
 import { encodeToBase64 } from "../utils/base64"
 
 import { Modal } from "./Modal"
 
-interface ModalTokenProps {
+interface IModalTokenProps {
   isOpen: boolean
   onClose: () => void
   email: string
 }
 
-export const ModalToken: React.FC<ModalTokenProps> = ({
-  isOpen,
-  onClose,
-  email,
-}) => {
+export const ModalToken = ({ isOpen, onClose, email }: IModalTokenProps) => {
   const [token, setToken] = useState("")
   const [message, setMessage] = useState<string | undefined>()
+  const { isLoading, setIsLoading } = useLoading()
 
   useEffect(() => {
     const fetchToken = async () => {
+      setIsLoading(true)
       try {
         const code = await getCode(email)
 
@@ -30,10 +30,6 @@ export const ModalToken: React.FC<ModalTokenProps> = ({
         }
 
         const encodedToken = encodeToBase64(email, code)
-
-        console.log("email: ", email)
-        console.log("code: ", code)
-        console.log("encodedToken: ", encodedToken)
 
         const statusMessage = await setStatus({
           token: encodedToken,
@@ -44,23 +40,29 @@ export const ModalToken: React.FC<ModalTokenProps> = ({
         setMessage(statusMessage)
       } catch (error) {
         console.error("Failed to fetch token:", error)
-        setMessage("Failed to fetch token")
+        setMessage("Ошибка при получении токена")
+      } finally {
+        setIsLoading(false)
       }
     }
 
     if (isOpen) {
       fetchToken()
     }
-  }, [isOpen, email])
+  }, [isOpen, email, setIsLoading])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalContainer>
-        <Title>Your Token</Title>
-        <Text>Email: {email}</Text>
-        <Text>Token: {token.replace(/.(?=.{4})/g, "*")}</Text>
-        {message && <ErrorMessage>{message}</ErrorMessage>}
-      </ModalContainer>
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <ModalContainer>
+          <Title>Ваш токен</Title>
+          <Text>Эл. почта: {email}</Text>
+          <Text>Токен: {token.replace(/.(?=.{4})/g, "*")}</Text>
+          {message && <ErrorMessage>{message}</ErrorMessage>}
+        </ModalContainer>
+      )}
     </Modal>
   )
 }

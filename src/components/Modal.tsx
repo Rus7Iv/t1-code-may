@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react"
 import styled, { keyframes } from "styled-components"
 
-interface ModalProps {
+interface IModalProps {
   isOpen: boolean
   onClose: () => void
   children: React.ReactNode
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+export const Modal = ({ isOpen, onClose, children }: IModalProps) => {
   const [visible, setVisible] = useState(isOpen)
   const [isClosing, setIsClosing] = useState(false)
 
