@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import styled from "styled-components"
 
 import { getCode, setStatus } from "../api/api"
 import { encodeToBase64 } from "../utils/base64"
@@ -36,9 +37,25 @@ export const ModalToken: React.FC<ModalTokenProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <h2>Your Token</h2>
-      <p>Email: {email}</p>
-      <p>Token: {token.replace(/.(?=.{4})/g, "*")}</p>
+      <ModalContainer>
+        <Title>Your Token</Title>
+        <Text>Email: {email}</Text>
+        <Text>Token: {token.replace(/.(?=.{4})/g, "*")}</Text>
+      </ModalContainer>
     </Modal>
   )
 }
+
+const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`
+
+const Title = styled.h2`
+  margin: 0;
+`
+
+const Text = styled.p`
+  margin: 0;
+`
