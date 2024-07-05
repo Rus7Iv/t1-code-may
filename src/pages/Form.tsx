@@ -12,8 +12,9 @@ export const Form = () => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [role, setRole] = useState("")
-  const [error, setError] = useState("")
+  const [error, setError] = useState<string | undefined>()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [submittedEmail, setSubmittedEmail] = useState("")
   const { isLoading, setIsLoading } = useLoading()
 
   useEffect(() => {
@@ -22,8 +23,9 @@ export const Form = () => {
       try {
         const roles = await getRoles()
         setRoles(roles)
+        setError(undefined)
       } catch (error) {
-        console.error(error)
+        setError((error as Error).message)
       } finally {
         setIsLoading(false)
       }
@@ -31,6 +33,16 @@ export const Form = () => {
 
     fetchRoles()
   }, [setIsLoading])
+
+  const clearForm = () => {
+    setError(undefined)
+    setSubmittedEmail(email)
+    setIsModalOpen(true)
+    setEmail("")
+    setFirstName("")
+    setLastName("")
+    setRole("")
+  }
 
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -48,10 +60,9 @@ export const Form = () => {
         email: email,
         role: role,
       })
-      setError("")
-      setIsModalOpen(true)
+      clearForm()
     } catch (error) {
-      console.error(error)
+      setError((error as Error).message)
     } finally {
       setIsLoading(false)
     }
@@ -94,7 +105,7 @@ export const Form = () => {
       <ModalToken
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        email={email}
+        email={submittedEmail}
       />
     </Container>
   )

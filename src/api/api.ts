@@ -5,8 +5,14 @@ const api = axios.create({
 })
 
 const handleError = (error: AxiosError) => {
-  console.error("API error:", error)
-  throw error
+  if (axios.isAxiosError(error) && error.response && error.response.data) {
+    const responseData = error.response.data as { message?: string }
+    const errorMessage = responseData.message || error.message
+    console.error("API error:", errorMessage)
+    throw new Error(errorMessage)
+  } else {
+    throw new Error(error.message)
+  }
 }
 
 export const getRoles = async () => {
@@ -32,8 +38,12 @@ export const signUp = async (data: {
 }
 
 export const getCode = async (email: string) => {
-  const response = await api.get(`/api/get-code?email=${email}`)
-  return response.data
+  try {
+    const response = await api.get(`/api/get-code?email=${email}`)
+    return response.data
+  } catch (error) {
+    handleError(error as AxiosError)
+  }
 }
 
 export const setStatus = async (data: { token: string; status: string }) => {
