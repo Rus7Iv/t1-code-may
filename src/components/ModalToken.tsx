@@ -18,16 +18,34 @@ export const ModalToken: React.FC<ModalTokenProps> = ({
   email,
 }) => {
   const [token, setToken] = useState("")
+  const [message, setMessage] = useState<string | undefined>()
 
   useEffect(() => {
     const fetchToken = async () => {
-      const code = await getCode(email)
-      const encodedToken = encodeToBase64(email, code)
-      await setStatus({
-        token: encodedToken,
-        status: "increased",
-      })
-      setToken(encodedToken)
+      try {
+        const code = await getCode(email)
+
+        if (!code || typeof code !== "string") {
+          throw new Error("Failed to get valid code")
+        }
+
+        const encodedToken = encodeToBase64(email, code)
+
+        console.log("email: ", email)
+        console.log("code: ", code)
+        console.log("encodedToken: ", encodedToken)
+
+        const statusMessage = await setStatus({
+          token: encodedToken,
+          status: "increased",
+        })
+
+        setToken(code)
+        setMessage(statusMessage)
+      } catch (error) {
+        console.error("Failed to fetch token:", error)
+        setMessage("Failed to fetch token")
+      }
     }
 
     if (isOpen) {
@@ -41,6 +59,7 @@ export const ModalToken: React.FC<ModalTokenProps> = ({
         <Title>Your Token</Title>
         <Text>Email: {email}</Text>
         <Text>Token: {token.replace(/.(?=.{4})/g, "*")}</Text>
+        {message && <ErrorMessage>{message}</ErrorMessage>}
       </ModalContainer>
     </Modal>
   )
@@ -58,4 +77,9 @@ const Title = styled.h2`
 
 const Text = styled.p`
   margin: 0;
+`
+
+const ErrorMessage = styled.p`
+  margin: 0;
+  color: red;
 `
