@@ -100,7 +100,7 @@ export const Form = () => {
           ))}
         </Select>
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Input type="submit" value="Зарегистрироваться" />
+        <SingUpBtn type="submit" value="Зарегистрироваться" />
       </SignUpForm>
       <ModalToken
         isOpen={isModalOpen}
@@ -126,10 +126,22 @@ const SignUpForm = styled.form`
 
 const Input = styled.input`
   margin-bottom: 10px;
+  font-size: 16px;
 `
 
 const Select = styled.select`
   margin-bottom: 10px;
+  font-size: 16px;
+`
+
+const SingUpBtn = styled.input`
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
 `
 
 const ErrorMessage = styled.div`

@@ -4,6 +4,7 @@
   font-family: 'Google Sans', sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  --transition-props: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 body {
@@ -13,4 +14,26 @@ body {
   min-width: 320px;
   max-width: 1200px;
   min-height: 100vh;
+}
+
+input,
+select {
+  font-family: "Google Sans", sans-serif;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: var(--transition-props);
+}
+
+input:hover,
+select:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  border-color: #d3d3d3;
 }
