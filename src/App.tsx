@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 
 import api from "./api/api"
-import { encodeToBase64 } from "./utils/base64"
+import { ModalToken } from "./components/ModalToken"
 
 const App: React.FC = () => {
   const [roles, setRoles] = useState([])
-  const [token, setToken] = useState("")
   const [email, setEmail] = useState("")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [role, setRole] = useState("")
   const [error, setError] = useState("")
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -26,6 +26,7 @@ const App: React.FC = () => {
     event.preventDefault()
 
     if (role === "Выберите роль") {
+      setError("Пожалуйста, выберите роль")
       return
     }
 
@@ -36,17 +37,8 @@ const App: React.FC = () => {
       role: role,
     })
 
-    const codeResponse = await api.get(`/api/get-code?email=${email}`)
-
-    const encodedToken = encodeToBase64(email, codeResponse.data.code)
-
-    await api.post("/api/set-status", {
-      token: encodedToken,
-      status: "increased",
-    })
-
-    setToken(encodedToken)
     setError("")
+    setIsModalOpen(true)
   }
 
   return (
@@ -82,11 +74,11 @@ const App: React.FC = () => {
         {error && <ErrorMessage>{error}</ErrorMessage>}
         <Input type="submit" value="Sign Up" />
       </SignUpForm>
-      <Token>
-        <h2>Your token</h2>
-        <p>Email: {email}</p>
-        <p>Token: {token.replace(/.(?=.{4})/g, "*")}</p>
-      </Token>
+      <ModalToken
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        email={email}
+      />
     </Container>
   )
 }
@@ -97,10 +89,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
-
-const Token = styled.div`
-  margin-bottom: 20px;
 `
 
 const SignUpForm = styled.form`
