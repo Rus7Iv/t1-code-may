@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 
 import api from "./api/api"
-
-const encodeToBase64 = (email: string, code: string): string => {
-  const stringToEncode = `${email}:${code}`
-  return btoa(encodeURIComponent(stringToEncode))
-}
+import { encodeToBase64 } from "./utils/base64"
 
 const App: React.FC = () => {
   const [roles, setRoles] = useState([])
@@ -30,7 +26,6 @@ const App: React.FC = () => {
     event.preventDefault()
 
     if (role === "Выберите роль") {
-      setError("Пожалуйста, выберите роль")
       return
     }
 
@@ -56,13 +51,8 @@ const App: React.FC = () => {
 
   return (
     <Container>
-      <Roles>
-        <h2>Roles</h2>
-        {roles.map((role, index) => (
-          <p key={index}>{role}</p>
-        ))}
-      </Roles>
       <SignUpForm onSubmit={signUp}>
+        <h1>Form</h1>
         <Input
           type="text"
           placeholder="Last Name"
@@ -93,7 +83,7 @@ const App: React.FC = () => {
         <Input type="submit" value="Sign Up" />
       </SignUpForm>
       <Token>
-        <h2>Token</h2>
+        <h2>Your token</h2>
         <p>Email: {email}</p>
         <p>Token: {token.replace(/.(?=.{4})/g, "*")}</p>
       </Token>
@@ -107,10 +97,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
-
-const Roles = styled.div`
-  margin-bottom: 20px;
 `
 
 const Token = styled.div`
