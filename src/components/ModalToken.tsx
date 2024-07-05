@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 
-import api from "../api/api"
+import { getCode, setStatus } from "../api/api"
 import { encodeToBase64 } from "../utils/base64"
 
 import { Modal } from "./Modal"
@@ -20,9 +20,9 @@ export const ModalToken: React.FC<ModalTokenProps> = ({
 
   useEffect(() => {
     const fetchToken = async () => {
-      const codeResponse = await api.get(`/api/get-code?email=${email}`)
-      const encodedToken = encodeToBase64(email, codeResponse.data.code)
-      await api.post("/api/set-status", {
+      const code = await getCode(email)
+      const encodedToken = encodeToBase64(email, code)
+      await setStatus({
         token: encodedToken,
         status: "increased",
       })

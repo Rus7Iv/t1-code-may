@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 
-import api from "./api/api"
+import { getRoles, signUp } from "./api/api"
 import { ModalToken } from "./components/ModalToken"
 
 const App: React.FC = () => {
@@ -15,14 +15,14 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const fetchRoles = async () => {
-      const response = await api.get("/api/get-roles")
-      setRoles(response.data.roles)
+      const roles = await getRoles()
+      setRoles(roles)
     }
 
     fetchRoles()
   }, [])
 
-  const signUp = async (event: React.FormEvent) => {
+  const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault()
 
     if (role === "Выберите роль") {
@@ -30,7 +30,7 @@ const App: React.FC = () => {
       return
     }
 
-    await api.post("/api/sign-up", {
+    await signUp({
       last_name: lastName,
       first_name: firstName,
       email: email,
@@ -43,7 +43,7 @@ const App: React.FC = () => {
 
   return (
     <Container>
-      <SignUpForm onSubmit={signUp}>
+      <SignUpForm onSubmit={handleSignUp}>
         <h1>Form</h1>
         <Input
           type="text"
