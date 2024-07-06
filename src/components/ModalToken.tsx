@@ -7,6 +7,7 @@ import { useLoading } from "../contexts/LoadingContext"
 import { encodeToBase64 } from "../utils/base64"
 
 import { Modal } from "./Modal"
+import { Token } from "./Token"
 
 interface IModalTokenProps {
   isOpen: boolean
@@ -65,13 +66,8 @@ export const ModalToken = ({ isOpen, onClose, email }: IModalTokenProps) => {
           <Title>Ваш токен</Title>
           <Text>Эл. почта: {email}</Text>
           <TokenContainer onClick={toggleShowToken}>
-            <Text>Токен:</Text>
-            <BlurredToken showToken={showToken}>
-              {token.slice(0, -4)}
-              <LastFourDigits showToken={showToken}>
-                {token.slice(-4)}
-              </LastFourDigits>
-            </BlurredToken>
+            <Text>Токен: </Text> <pre> </pre>
+            <Token token={token} showToken={showToken} />
           </TokenContainer>
           {message && <ErrorMessage>{message}</ErrorMessage>}
         </ModalContainer>
@@ -97,17 +93,6 @@ const Text = styled.p`
 const TokenContainer = styled.div`
   cursor: pointer;
   display: flex;
-`
-
-const BlurredToken = styled.span<{ showToken: boolean }>`
-  filter: ${({ showToken }) => (showToken ? "none" : "blur(10px)")};
-  transition: filter 0.3s ease;
-`
-
-const LastFourDigits = styled.span<{ showToken: boolean }>`
-  filter: none;
-  opacity: ${({ showToken }) => (showToken ? 1 : 0.5)};
-  transition: opacity 0.3s ease;
 `
 
 const ErrorMessage = styled.p`
