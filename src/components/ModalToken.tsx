@@ -16,6 +16,7 @@ interface IModalTokenProps {
 
 export const ModalToken = ({ isOpen, onClose, email }: IModalTokenProps) => {
   const [token, setToken] = useState("")
+  const [showToken, setShowToken] = useState(false)
   const [message, setMessage] = useState<string | undefined>()
   const { isLoading, setIsLoading } = useLoading()
 
@@ -51,6 +52,10 @@ export const ModalToken = ({ isOpen, onClose, email }: IModalTokenProps) => {
     }
   }, [isOpen, email, setIsLoading])
 
+  const toggleShowToken = () => {
+    setShowToken((prevState) => !prevState)
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       {isLoading ? (
@@ -59,7 +64,15 @@ export const ModalToken = ({ isOpen, onClose, email }: IModalTokenProps) => {
         <ModalContainer>
           <Title>Ваш токен</Title>
           <Text>Эл. почта: {email}</Text>
-          <Text>Токен: {token.replace(/.(?=.{4})/g, "*")}</Text>
+          <TokenContainer onClick={toggleShowToken}>
+            <Text>Токен:</Text>
+            <BlurredToken showToken={showToken}>
+              {token.slice(0, -4)}
+              <LastFourDigits showToken={showToken}>
+                {token.slice(-4)}
+              </LastFourDigits>
+            </BlurredToken>
+          </TokenContainer>
           {message && <ErrorMessage>{message}</ErrorMessage>}
         </ModalContainer>
       )}
@@ -79,6 +92,22 @@ const Title = styled.h2`
 
 const Text = styled.p`
   margin: 0;
+`
+
+const TokenContainer = styled.div`
+  cursor: pointer;
+  display: flex;
+`
+
+const BlurredToken = styled.span<{ showToken: boolean }>`
+  filter: ${({ showToken }) => (showToken ? "none" : "blur(10px)")};
+  transition: filter 0.3s ease;
+`
+
+const LastFourDigits = styled.span<{ showToken: boolean }>`
+  filter: none;
+  opacity: ${({ showToken }) => (showToken ? 1 : 0.5)};
+  transition: opacity 0.3s ease;
 `
 
 const ErrorMessage = styled.p`
