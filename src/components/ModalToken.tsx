@@ -95,6 +95,10 @@ const TokenContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 5px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 `
 
 const ErrorMessage = styled.p`
