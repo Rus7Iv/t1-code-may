@@ -11,6 +11,17 @@ export const Token = ({ token, showToken }: ITokenProps) => {
     ? token.slice(0, -4)
     : "*".repeat(maskedTokenLength)
 
+  const handleCopyToken = () => {
+    navigator.clipboard
+      .writeText(token)
+      .then(() => {
+        alert("Token copied to clipboard!")
+      })
+      .catch((err) => {
+        console.error("Failed to copy token: ", err)
+      })
+  }
+
   return (
     <TokenContainer>
       <InvisibleToken>{token}</InvisibleToken>
@@ -18,12 +29,14 @@ export const Token = ({ token, showToken }: ITokenProps) => {
         <BlurredToken $showToken={showToken}>{maskedToken}</BlurredToken>
         <LastFourDigits>{token.slice(-4)}</LastFourDigits>
       </VisibleTokenContainer>
+      <CopyButton onClick={handleCopyToken}>&#x1F4CB;</CopyButton>
     </TokenContainer>
   )
 }
 
 const TokenContainer = styled.div`
   display: flex;
+  align-items: center;
   position: relative;
   font-family: "Courier New", Courier, monospace;
 `
@@ -49,4 +62,18 @@ const LastFourDigits = styled.span`
   opacity: 1;
   transition: opacity 0.3s ease;
   font-family: "Courier New", Courier, monospace;
+`
+
+const CopyButton = styled.button`
+  margin-left: 5px;
+  padding: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  background: white;
+  border: none;
+  border-radius: 100px;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
 `

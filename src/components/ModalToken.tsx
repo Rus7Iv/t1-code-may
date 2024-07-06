@@ -66,7 +66,7 @@ export const ModalToken = ({ isOpen, onClose, email }: IModalTokenProps) => {
           <Title>Ваш токен</Title>
           <Text>Эл. почта: {email}</Text>
           <TokenContainer onClick={toggleShowToken}>
-            <Text>Токен: </Text> <pre> </pre>
+            <Text>Токен: </Text>
             <Token token={token} showToken={showToken} />
           </TokenContainer>
           {message && <ErrorMessage>{message}</ErrorMessage>}
@@ -93,6 +93,8 @@ const Text = styled.p`
 const TokenContainer = styled.div`
   cursor: pointer;
   display: flex;
+  flex-direction: row;
+  gap: 5px;
 `
 
 const ErrorMessage = styled.p`
