@@ -136,6 +136,15 @@ const ModalContainer = styled.div<{ $isOpen: boolean }>`
   position: relative;
   animation: ${({ $isOpen }) => ($isOpen ? slideIn : slideOut)} 0.3s ease-out
     forwards;
+
+  @media (max-width: 600px) {
+    display: flex;
+    max-width: 100%;
+    height: 96%;
+    border-radius: 0;
+    padding: 20px;
+    align-items: center;
+  }
 `
 
 const CloseButton = styled.button`
@@ -156,5 +165,9 @@ const CloseButton = styled.button`
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 600px) {
+    top: 100px;
   }
 `
