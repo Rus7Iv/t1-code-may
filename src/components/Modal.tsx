@@ -128,6 +128,7 @@ const ModalContainer = styled.div<{ $isOpen: boolean }>`
   padding: 20px;
   padding-top: 46px;
   border-radius: 8px;
+  min-height: 150px;
   max-width: 500px;
   width: 100%;
   box-shadow:
